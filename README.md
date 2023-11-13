@@ -1,6 +1,5 @@
 
-```markdown
-# Cyclic Round-Robin Arbiter for Resource Allocation in Verilog 
+#Cyclic Round-Robin Arbiter for Resource Allocation in Verilog 
 
 ## Introduction
 
