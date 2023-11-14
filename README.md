@@ -1,25 +1,37 @@
-# Round_Robin_Arbiter
 
-## AIM:
-Design Arbiter implemented with 3 User Requests using Verilog.
-## What is an Arbiter?
-At its most basic, an arbiter is a device that takes as input N
-requests, and outputs a single grant, in the form of a one-hot. A
-one-hot is a group of bits of arbitrary size consisting of all zeros
-except for one; i.e., one bit is logic high, or “hot.” In this way, the
-arbiter looks at its set of inputs and allows a single device access
-to the resource. The arbiter is a mediator between different
-system components and system resources. This could be two CPU
-cores that need to access shared memory, or two microcontrollers
-trying to take control of a communication bus. Whatever the
-application, the arbiter is a low-cost and relatively simple solution
-to an often-complex problem.
+# Cyclic Round-Robin Arbiter for Resource Allocation in Verilog 
 
-## Example of arbiter in action
+## Introduction
 
-Let's say we have three devices each with a request signal tied to
-an arbiter. “Device” here is used as a general term for any
-requester. The requester could be a FIFO (first-in, first-out) queue,
-a CPU, a state machine, etc. When the device needs access to a
-resource, it simply sets its request signal high. The arbiter checks
-its inputs and grants access
+In the dynamic landscape of digital systems, efficient resource allocation among multiple users is paramount for achieving optimal performance and fairness. This project presents a Verilog implementation of a Cyclic Round-Robin Arbiter for Resource Allocation—a crucial component designed to address the intricate challenges of shared resource management.
+
+### Key Features
+
+- **Cyclic Round-Robin Mechanism:** The arbiter employs a rotating priority mechanism, systematically distributing shared resources among multiple users. This ensures that each user receives fair access to resources in a predictable and equitable manner.
+
+- **Verilog Implementation:** The entire arbiter is coded in Verilog, allowing for seamless integration into various digital systems. Its modular nature facilitates adaptability to different architectures and design requirements.
+
+- **EDA Playground Simulation:** The project undergoes rigorous simulation on the EDA Playground platform, offering a comprehensive understanding of its behavior under diverse scenarios. This simulation environment enables users to validate the functionality and performance of the Cyclic Round-Robin Arbiter.
+
+- **Simple Priority Arbiter:** A straightforward priority arbiter is integrated into the system, determining resource allocation based on user requests. This ensures that higher-priority users are granted access to resources before lower-priority ones, contributing to the overall efficiency of the system.
+
+## Priority in Resource Allocation
+
+In the context of this project, priority refers to the order in which user requests are considered for resource allocation. The Cyclic Round-Robin Arbiter dynamically assigns priorities to users in a rotating fashion, preventing resource starvation and promoting fairness. Higher-priority users are granted access before lower-priority ones, ensuring a balanced distribution of resources.
+
+### How Priority Works
+
+The priority mechanism is orchestrated through a rotation pointer, which cycles through users in a round-robin fashion. When a user's request is granted, the rotation pointer moves to the next user in line, ensuring that each user has an opportunity to access shared resources.
+
+This approach provides not only fairness but also adaptability to varying workloads. Users with higher priority have their requests considered first, preventing delays for critical tasks while maintaining an overall equitable distribution.
+
+### How to Use
+
+1. **Simulation:**
+   - Open the project on [EDA Playground](https://www.edaplayground.com/).
+   - Run the simulation to observe the behavior of the Cyclic Round-Robin Arbiter.
+
+
+## Contributor
+  Asif Khan
+
