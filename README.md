@@ -1,37 +1,61 @@
-
-# Cyclic Round-Robin Arbiter for Resource Allocation in Verilog 
+# Round Robin Arbiter Project
 
 ## Introduction
 
-In the dynamic landscape of digital systems, efficient resource allocation among multiple users is paramount for achieving optimal performance and fairness. This project presents a Verilog implementation of a Cyclic Round-Robin Arbiter for Resource Allocation—a crucial component designed to address the intricate challenges of shared resource management.
+This project is a Verilog implementation of a round-robin arbiter designed to allocate resources among three users. The arbiter follows a fixed-time slot allocation scheme and uses a priority order for resource allocation, where User0 has the highest priority, followed by User1 and User2.
 
-### Key Features
+## Key Features
 
-- **Cyclic Round-Robin Mechanism:** The arbiter employs a rotating priority mechanism, systematically distributing shared resources among multiple users. This ensures that each user receives fair access to resources in a predictable and equitable manner.
+### Round-Robin Allocation
 
-- **Verilog Implementation:** The entire arbiter is coded in Verilog, allowing for seamless integration into various digital systems. Its modular nature facilitates adaptability to different architectures and design requirements.
+The arbiter allocates resources in a round-robin fashion, ensuring fair access to resources among the three users.
 
-- **EDA Playground Simulation:** The project undergoes rigorous simulation on the EDA Playground platform, offering a comprehensive understanding of its behavior under diverse scenarios. This simulation environment enables users to validate the functionality and performance of the Cyclic Round-Robin Arbiter.
+### Fixed-Time Slots
 
-- **Simple Priority Arbiter:** A straightforward priority arbiter is integrated into the system, determining resource allocation based on user requests. This ensures that higher-priority users are granted access to resources before lower-priority ones, contributing to the overall efficiency of the system.
+Each user is granted access to resources for fixed-time slots. This fixed-time approach ensures predictable and deterministic allocation of resources.
 
-## Priority in Resource Allocation
+### Priority-Based Allocation
 
-In the context of this project, priority refers to the order in which user requests are considered for resource allocation. The Cyclic Round-Robin Arbiter dynamically assigns priorities to users in a rotating fashion, preventing resource starvation and promoting fairness. Higher-priority users are granted access before lower-priority ones, ensuring a balanced distribution of resources.
+Users are assigned priority levels for resource allocation. The priority order is defined as follows:
 
-### How Priority Works
+- User0: Highest priority
+- User1: Medium priority
+- User2: Lowest priority
 
-The priority mechanism is orchestrated through a rotation pointer, which cycles through users in a round-robin fashion. When a user's request is granted, the rotation pointer moves to the next user in line, ensuring that each user has an opportunity to access shared resources.
+## How It Works
 
-This approach provides not only fairness but also adaptability to varying workloads. Users with higher priority have their requests considered first, preventing delays for critical tasks while maintaining an overall equitable distribution.
+### State Machine
 
-### How to Use
+The arbiter operates using a state machine that transitions between different states based on user requests and the current state. The states correspond to the different users and the idle state.
 
-1. **Simulation:**
-   - Open the project on [EDA Playground](https://www.edaplayground.com/).
-   - Run the simulation to observe the behavior of the Cyclic Round-Robin Arbiter.
+### State Transitions
 
+The state transitions are determined by the presence of user requests. Users with higher priority are given preference in resource allocation. The state transitions follow the round-robin order and prioritize User0 over User1 and User2.
+
+### Fixed-Time Allocation
+
+Users are granted access to resources for fixed-time slots within their respective states. The fixed-time approach ensures a consistent and predictable allocation pattern.
+
+## How to Use EDA Playground
+
+1. Open [EDA Playground](https://www.edaplayground.com/).
+2. Create a new project.
+3. Add the Verilog files (`round_robin_arbiter.v` and `round_robin_arbiter_tb.v`) to the project.
+4. Run the simulation to observe waveforms and results.
+
+## Priority for Resource Allocation
+
+The priority order for resource allocation is as follows:
+
+1. User0: Highest priority
+2. User1: Medium priority
+3. User2: Lowest priority
+
+The arbiter follows this priority order when deciding which user gets access to resources.
 
 ## Contributor
-  Asif Khan
 
+- **Asif Khan**
+  - Email: asi.f.khan@hotmail.com
+
+Feel free to explore the project, make modifications, and use it as needed. If you have any questions or suggestions, please reach out to the contributor.

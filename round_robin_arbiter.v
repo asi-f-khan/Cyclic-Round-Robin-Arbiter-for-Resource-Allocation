@@ -2,74 +2,86 @@
 // Mail : asi.f.khan@hotmail.com
 
 
-// Code your design here
-module my_custom_round_robin_arbiter (
-    reset_an,
-    clock,
-    user_requests,
-    granted
+/// Priority -> User0> User1> User2
+
+module round_robin_arbiter(
+    input clk, rst,
+    input [2:0] req_inputs,
+    output reg [2:0] grant_outputs
 );
 
-input       reset_an;      // Active-low reset signal
-input       clock;         // Clock signal
-input   [2:0]   user_requests;  // Adjusted to support 3 user requests
-output  [2:0]   granted;        // Adjusted to support 3 user requests
+reg [1:0] current_state;
+reg [1:0] next_state;
 
-reg [1:0] rotation_pointer;
-reg [2:0] shifted_requests;
-reg [2:0] shifted_grants;
-reg [2:0] combined_grants;
-reg [2:0] granted;
+parameter [1:0] IDLE = 2'b00;
+parameter [1:0] STATE_0 = 2'b01;
+parameter [1:0] STATE_1 = 2'b10;
+parameter [1:0] STATE_2 = 2'b11;
 
-// Shift user requests to implement round-robin priority
-always @ (*)
-begin
-    case (rotation_pointer[1:0])
-        2'b00: shifted_requests[2:0] = user_requests[2:0];
-        2'b01: shifted_requests[2:0] = {user_requests[0], user_requests[2:1]};
-        2'b10: shifted_requests[2:0] = {user_requests[1:0], user_requests[2]};
-        2'b11: shifted_requests[2:0] = {user_requests[2], user_requests[1:0]};
+always @(posedge clk or posedge rst) begin
+    if(rst)
+        current_state <= IDLE;
+    else
+        current_state <= next_state;
+end
+
+always @(*) begin
+    case(current_state)
+        IDLE: begin
+            if(req_inputs[0])
+                next_state = STATE_0;
+            else if(req_inputs[1])
+                next_state = STATE_1;
+            else if(req_inputs[2])
+                next_state = STATE_2;
+            else
+                next_state = IDLE;
+        end
+
+        STATE_0: begin
+            if(req_inputs[1])
+                next_state = STATE_1;
+            else if(req_inputs[2])
+                next_state = STATE_2;
+            else if(req_inputs[0])
+                next_state = STATE_0;
+            else
+                next_state = IDLE;
+        end
+
+        STATE_1: begin
+            if(req_inputs[2])
+                next_state = STATE_2;
+            else if(req_inputs[0])
+                next_state = STATE_0;
+            else if(req_inputs[1])
+                next_state = STATE_1;
+            else
+                next_state = IDLE;
+        end
+
+        STATE_2: begin
+            if(req_inputs[0])
+                next_state = STATE_0;
+            else if(req_inputs[1])
+                next_state = STATE_1;
+            else if(req_inputs[2])
+                next_state = STATE_2;
+            else
+                next_state = IDLE;
+        end
+
+        default: next_state = IDLE;
     endcase
 end
 
-// Simple priority arbiter logic
-always @ (*)
-begin
-    shifted_grants[2:0] = 3'b0;
-    if (shifted_requests[0])   shifted_grants[0] = 1'b1;
-    else if (shifted_requests[1])  shifted_grants[1] = 1'b1;
-    else if (shifted_requests[2])  shifted_grants[2] = 1'b1;
-end
-
-// Generate combined grant signal
-always @ (*)
-begin
-    case (rotation_pointer[1:0])
-        2'b00: combined_grants[2:0] = shifted_grants[2:0];
-        2'b01: combined_grants[2:0] = {shifted_grants[1:0], shifted_grants[2]};
-        2'b10: combined_grants[2:0] = {shifted_grants[0], shifted_grants[2:1]};
-        2'b11: combined_grants[2:0] = {shifted_grants[2], shifted_grants[1:0]};
+always @(*) begin
+    case(current_state)
+        STATE_0: grant_outputs = 3'b001;
+        STATE_1: grant_outputs = 3'b010;
+        STATE_2: grant_outputs = 3'b100;
+        default: grant_outputs = 3'b000;
     endcase
-end
-
-// Update the grant signal
-always @ (posedge clock or negedge reset_an)
-begin
-    if (!reset_an)    granted[2:0] <= 3'b0;
-    else        granted[2:0] <= combined_grants[2:0] & ~granted[2:0];
-end
-
-// Update the rotation pointer
-always @ (posedge clock or negedge reset_an)
-begin
-    if (!reset_an)
-        rotation_pointer[1:0] <= 2'b0;
-    else 
-        case (1'b1)
-            granted[0]: rotation_pointer[1:0] <= 2'd1;
-            granted[1]: rotation_pointer[1:0] <= 2'd2;
-            granted[2]: rotation_pointer[1:0] <= 2'd0;
-        endcase
 end
 
 endmodule

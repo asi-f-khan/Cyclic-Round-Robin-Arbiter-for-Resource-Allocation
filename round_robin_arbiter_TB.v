@@ -1,61 +1,40 @@
-// Code your testbench here
-// or browse Examples
-module tb_custom_round_robin();
+////Testbenches
+
+
+module round_robin_arbiter_tb();
 
 reg clk;
-reg req0;
-reg req1;
-reg req2;
-reg rst_an;
+reg rst;
+reg [2:0] req_inputs;
+wire [2:0] grant_outputs;
 
-my_custom_round_robin_arbiter dut (
-    .reset_an(rst_an),
-    .clock(clk),
-    .user_requests({req2, req1, req0}),
-    .granted({grant2, grant1, grant0})
+round_robin_arbiter dut (
+    .clk(clk),
+    .rst(rst),
+    .req_inputs(req_inputs),
+    .grant_outputs(grant_outputs)
 );
 
-initial
-begin
-    // Testbench initialization
-  $dumpfile("dump.vcd"); 
-  $dumpvars;
+always #5 clk = ~clk;
+
+initial begin
+  $dumpfile("dump.vcd"); $dumpvars; // this line used to show wave form in EDA
     clk = 0;
-    req2 = 0;
-    req1 = 0;
-    req0 = 0;
-    rst_an = 1'b1;
+    rst = 0;
+    req_inputs = 0;
 
-    #10 rst_an = 0;
-    #10 rst_an = 1;
-
-    // Test scenario
-    repeat (1) @ (posedge clk);
-    req0 <= 1;
-
-    repeat (1) @ (posedge clk);
-    req0 <= 0;
-
-    repeat (1) @ (posedge clk);
-    req0 <= 1;
-
-    req1 <= 1;
-
-    repeat (1) @ (posedge clk);
-    req2 <= 1;
-    req1 <= 0;
-
-    repeat (1) @ (posedge clk);
-    req2 <= 0;
-
-    repeat (1) @ (posedge clk);
-    req0 <= 0;
-
-    repeat (1) @ (posedge clk);
-    #10 $finish;
-
+    req_inputs = 3'b001;
+    #20;
+    req_inputs = 3'b011;
+    #20;
+    req_inputs = 3'b100;
+    #20;
+    req_inputs = 3'b110;
+    #20;
+    req_inputs = 3'b101;
+    #20;
+    $finish;
 end
 
-always #1 clk = ~clk;
 
 endmodule
